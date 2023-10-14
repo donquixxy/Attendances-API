@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"dg-test/ent/attendance"
 	"dg-test/ent/history"
 	"dg-test/ent/user"
 	"errors"
@@ -74,8 +75,9 @@ var (
 func checkColumn(table, column string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			history.Table: history.ValidColumn,
-			user.Table:    user.ValidColumn,
+			attendance.Table: attendance.ValidColumn,
+			history.Table:    history.ValidColumn,
+			user.Table:       user.ValidColumn,
 		})
 	})
 	return columnCheck(table, column)

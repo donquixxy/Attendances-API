@@ -8,6 +8,20 @@ import (
 )
 
 var (
+	// AttendancesColumns holds the columns for the "attendances" table.
+	AttendancesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true},
+		{Name: "id_user", Type: field.TypeString},
+		{Name: "type", Type: field.TypeInt},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+	}
+	// AttendancesTable holds the schema information for the "attendances" table.
+	AttendancesTable = &schema.Table{
+		Name:       "attendances",
+		Columns:    AttendancesColumns,
+		PrimaryKey: []*schema.Column{AttendancesColumns[0]},
+	}
 	// HistoriesColumns holds the columns for the "histories" table.
 	HistoriesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true},
@@ -40,6 +54,7 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		AttendancesTable,
 		HistoriesTable,
 		UsersTable,
 	}

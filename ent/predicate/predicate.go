@@ -6,6 +6,9 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
+// Attendance is the predicate function for attendance builders.
+type Attendance func(*sql.Selector)
+
 // History is the predicate function for history builders.
 type History func(*sql.Selector)
 
