@@ -18,6 +18,7 @@ type UserService interface {
 	CreateUser(ctx context.Context, r *request.CreateUserRequest) (*ent.User, error)
 	Login(ctx context.Context, r *request.LoginRequest) (token, refreshToken string, err error)
 	UpdateUser(ctx context.Context, r *request.UpdateRequest, idUser string) (*ent.User, error)
+	GetUsers(ctx context.Context) ([]*ent.User, error)
 	GenerateToken(u *ent.User) (string, error)
 	GenerateRefreshToken(u *ent.User) (string, error)
 }
@@ -30,6 +31,10 @@ func NewUserService(userRepository repository.UserRepository) UserService {
 	return &userService{
 		userRepository: userRepository,
 	}
+}
+
+func (s *userService) GetUsers(ctx context.Context) ([]*ent.User, error) {
+	return s.userRepository.GetAllUser(ctx)
 }
 
 func (s *userService) UpdateUser(ctx context.Context, r *request.UpdateRequest, idUser string) (*ent.User, error) {

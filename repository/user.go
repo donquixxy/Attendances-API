@@ -4,6 +4,7 @@ import (
 	"context"
 	"dg-test/ent"
 	"dg-test/ent/user"
+	"dg-test/exception"
 	"log"
 	"time"
 )
@@ -13,6 +14,7 @@ type UserRepository interface {
 	CreateUser(ctx context.Context, value *ent.User) (*ent.User, error)
 	FindUserByEmail(ctx context.Context, email string) (*ent.User, error)
 	UpdateUser(ctx context.Context, value *ent.User) (*ent.User, error)
+	GetAllUser(ctx context.Context) ([]*ent.User, error)
 }
 
 type userRepository struct {
@@ -24,6 +26,18 @@ func NewUserRepository(client *ent.Client) UserRepository {
 	return &userRepository{
 		client: client,
 	}
+}
+
+func (s *userRepository) GetAllUser(ctx context.Context) ([]*ent.User, error) {
+	result, err := s.client.User.Query().All(ctx)
+
+	if err != nil {
+		return nil, &exception.RecordNotFoundError{
+			Message: err.Error(),
+		}
+	}
+
+	return result, nil
 }
 
 func (s *userRepository) UpdateUser(ctx context.Context, value *ent.User) (*ent.User, error) {

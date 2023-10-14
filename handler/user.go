@@ -16,6 +16,7 @@ type UserHandler interface {
 	StoreUser(c echo.Context) error
 	Login(c echo.Context) error
 	UpdateUser(c echo.Context) error
+	GetUsers(c echo.Context) error
 }
 
 type userHandler struct {
@@ -31,6 +32,22 @@ func NewUserHandler(
 		s:         s,
 		validator: validator,
 	}
+}
+
+func (h *userHandler) GetUsers(c echo.Context) error {
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
+	defer cancel()
+
+	users, err := h.s.GetUsers(ctx)
+
+	if err != nil {
+		return ErrorResponse(err, c)
+	}
+
+	res := SuccessResponse("Successfully retrieved", users)
+
+	return c.JSON(200, res)
 }
 
 func (h *userHandler) UpdateUser(c echo.Context) error {
