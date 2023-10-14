@@ -3,8 +3,11 @@ package main
 import (
 	"context"
 	"dg-test/database"
-	"dg-test/ent"
+	"dg-test/server"
 	"log"
+	"os"
+	"os/signal"
+	"time"
 )
 
 func main() {
@@ -16,19 +19,21 @@ func main() {
 		log.Fatalf("failed creating schema %v", err)
 	}
 
-	TestCreateUser(context.Background(), c)
-}
+	// New echo instance
+	serv := server.NewServer(c)
 
-func TestCreateUser(ctx context.Context, client *ent.Client) (*ent.User, error) {
-	result, err := client.User.Create().SetID("98821").SetEmail("testmail@mail").
-		SetName("indra").Save(ctx)
+	go func() {
+		if err := serv.E.Start(":9087"); err != nil {
+			log.Fatalf("echo err : %v", err)
+		}
+	}()
 
-	if err != nil {
-		log.Printf("error ccreate user %v", err)
-		return nil, err
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := serv.E.Shutdown(ctx); err != nil {
+		serv.E.Logger.Fatal(err)
 	}
-
-	log.Println("Result :", result)
-
-	return result, nil
 }
