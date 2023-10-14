@@ -17,6 +17,8 @@ const (
 	FieldName = "name"
 	// FieldEmail holds the string denoting the email field in the database.
 	FieldEmail = "email"
+	// FieldPassword holds the string denoting the password field in the database.
+	FieldPassword = "password"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
@@ -30,6 +32,7 @@ var Columns = []string{
 	FieldID,
 	FieldName,
 	FieldEmail,
+	FieldPassword,
 	FieldCreatedAt,
 	FieldUpdatedAt,
 }
@@ -67,6 +70,11 @@ func ByName(opts ...sql.OrderTermOption) OrderOption {
 // ByEmail orders the results by the email field.
 func ByEmail(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldEmail, opts...).ToFunc()
+}
+
+// ByPassword orders the results by the password field.
+func ByPassword(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPassword, opts...).ToFunc()
 }
 
 // ByCreatedAt orders the results by the created_at field.

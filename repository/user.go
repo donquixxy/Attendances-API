@@ -24,8 +24,11 @@ func NewUserRepository(client *ent.Client) UserRepository {
 }
 
 func (s *userRepository) CreateUser(ctx context.Context, value *ent.User) (*ent.User, error) {
-	result, err := s.client.User.Create().SetID(value.ID).SetEmail(value.Email).SetName(value.Name).
-		SetCreatedAt(time.Now()).SetCreatedAt(time.Now()).Save(ctx)
+	result, err := s.client.User.Create().SetID(value.ID).
+		SetEmail(value.Email).SetName(value.Name).
+		SetPassword(value.Password).
+		SetCreatedAt(time.Now()).
+		SetCreatedAt(time.Now()).Save(ctx)
 
 	if err != nil {
 		log.Printf("Failed create user : [%v]", err)
