@@ -17,6 +17,7 @@ import (
 type AttendeesHandler interface {
 	InsertAttendees(c echo.Context) error // Id user input
 	StoreAttendance(c echo.Context) error // Id user claims by jwt
+	GetAllAttendances(c echo.Context) error
 }
 
 type attendeesHandler struct {
@@ -29,6 +30,23 @@ func NewAttendeesHandler(service service.AttendeesService, validator *validator.
 		service:   service,
 		validator: validator,
 	}
+}
+
+func (h *attendeesHandler) GetAllAttendances(c echo.Context) error {
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
+
+	defer cancel()
+
+	result, err := h.service.GetAllAttendances(ctx)
+
+	if err != nil {
+		return ErrorResponse(err, c)
+	}
+
+	res := SuccessResponse("Success", result)
+
+	return c.JSON(200, res)
 }
 
 func (h *attendeesHandler) StoreAttendance(c echo.Context) error {

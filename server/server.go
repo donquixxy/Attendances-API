@@ -67,6 +67,7 @@ func (s *Server) attendeesRoute(handler handler.AttendeesHandler) {
 
 	group.POST("/attendance", handler.InsertAttendees)
 	group.POST("/absent", handler.StoreAttendance)
+	group.GET("/attendances", handler.GetAllAttendances)
 }
 
 func ErrorHandler(err error, c echo.Context) {
