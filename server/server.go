@@ -66,6 +66,7 @@ func (s *Server) attendeesRoute(handler handler.AttendeesHandler) {
 	group := s.E.Group("/api", m.Auth(s.secretKey))
 
 	group.POST("/attendance", handler.InsertAttendees)
+	group.POST("/absent", handler.StoreAttendance)
 }
 
 func ErrorHandler(err error, c echo.Context) {

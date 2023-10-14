@@ -4,13 +4,14 @@ import (
 	"context"
 	"dg-test/ent"
 	"dg-test/ent/attendance"
+	"dg-test/exception"
 	"log"
 	"time"
 )
 
 type AttendeesRepository interface {
 	InsertAttendance(ctx context.Context, v *ent.Attendance) (*ent.Attendance, error)
-	GetByTypeAndDate(ctx context.Context, t int, date time.Time) (*ent.Attendance, error)
+	GetByTypeAndDate(ctx context.Context, t int, date time.Time, idUser string) (*ent.Attendance, error)
 }
 
 type attendeesRepository struct {
@@ -38,7 +39,19 @@ func (s *attendeesRepository) InsertAttendance(ctx context.Context, v *ent.Atten
 	return result, nil
 }
 
-func (s *attendeesRepository) GetByTypeAndDate(ctx context.Context, t int, date time.Time) (*ent.Attendance, error) {
-	return s.c.Attendance.Query().Where(attendance.Type(t)).Where(attendance.CreatedAtLTE(date)).
+func (s *attendeesRepository) GetByTypeAndDate(ctx context.Context, t int, date time.Time, iduser string) (*ent.Attendance, error) {
+	result, err := s.c.Attendance.Query().
+		Where(attendance.IDUser(iduser)).
+		Where(attendance.Type(t)).
+		Where(attendance.
+			CreatedAtLTE(date)).
 		Only(ctx)
+
+	if err != nil {
+		return nil, &exception.RecordNotFoundError{
+			Message: err.Error(),
+		}
+	}
+
+	return result, nil
 }

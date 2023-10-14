@@ -12,7 +12,8 @@ import (
 )
 
 type AttendeesService interface {
-	InsertAttendance(ctx context.Context, r *request.CreateRequest) (*ent.Attendance, error)
+	InsertAttendance(ctx context.Context, r *request.CreateRequest) (*ent.Attendance, error) // User id is by input
+	StoreAttendance(ctx context.Context, idUser string, typ int) (*ent.Attendance, error)    // User id claims by token
 }
 
 type attendeesService struct {
@@ -25,6 +26,49 @@ func NewAttendeesService(
 	return &attendeesService{
 		attendeesRepository: attendeesRepository,
 	}
+}
+
+func (s *attendeesService) StoreAttendance(ctx context.Context, idUser string, typ int) (*ent.Attendance, error) {
+	// Type 1 -> Checkin
+	// Type 2 -> Checkout
+
+	att := &ent.Attendance{
+		ID:        utils.GenerateUUID(),
+		IDUser:    idUser,
+		Type:      typ,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+	err := s.IsValidAttendees(ctx, att)
+
+	if err != nil {
+		return nil, &exception.BadRequestError{
+			Message: err.Error(),
+		}
+	}
+
+	return s.attendeesRepository.InsertAttendance(ctx, att)
+}
+
+func (s *attendeesService) IsValidAttendees(ctx context.Context, att *ent.Attendance) error {
+
+	// Check if user going to entry checkin / checkout more than once
+	// as per today
+	var str string
+	result, _ := s.attendeesRepository.GetByTypeAndDate(ctx, att.Type, att.CreatedAt, att.IDUser)
+
+	if att.Type == 1 {
+		str = "checkin"
+	} else {
+		str = "checkout"
+	}
+	if result != nil {
+		return &exception.BadRequestError{
+			Message: fmt.Sprintf("employee already %s today.", str),
+		}
+	}
+
+	return nil
 }
 
 func (s *attendeesService) InsertAttendance(ctx context.Context, r *request.CreateRequest) (*ent.Attendance, error) {
@@ -40,20 +84,11 @@ func (s *attendeesService) InsertAttendance(ctx context.Context, r *request.Crea
 		UpdatedAt: time.Now(),
 	}
 
-	// Check if user going to entry checkin / checkout more than once
-	// as per today
-	var str string
-	result, _ := s.attendeesRepository.GetByTypeAndDate(ctx, att.Type, att.CreatedAt)
+	err := s.IsValidAttendees(ctx, att)
 
-	if att.Type == 1 {
-		str = "checkin"
-	} else {
-		str = "checkout"
-	}
-
-	if result != nil {
+	if err != nil {
 		return nil, &exception.BadRequestError{
-			Message: fmt.Sprintf("employee already %s today.", str),
+			Message: err.Error(),
 		}
 	}
 
