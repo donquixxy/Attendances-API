@@ -56,10 +56,10 @@ func (s *Server) userRoute(handler handler.UserHandler) {
 
 	group.POST("/user", handler.StoreUser, m.Auth(s.secretKey))
 	group.POST("/auth", handler.Login)
-	group.PUT("/user/:id", handler.UpdateUser)
-	group.DELETE("/user/:id", handler.DeleteUser)
-	group.GET("/user/:id", handler.GetUserByID)
-	group.GET("/users", handler.GetUsers)
+	group.PUT("/user/:id", handler.UpdateUser, m.Auth(s.secretKey))
+	group.DELETE("/user/:id", handler.DeleteUser, m.Auth(s.secretKey))
+	group.GET("/user/:id", handler.GetUserByID, m.Auth(s.secretKey))
+	group.GET("/users", handler.GetUsers, m.Auth(s.secretKey))
 }
 
 func (s *Server) attendeesRoute(handler handler.AttendeesHandler) {
