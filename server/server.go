@@ -26,6 +26,7 @@ func NewServer(
 ) *Server {
 	e := echo.New()
 	e.Use(middleware.CORS())
+	e.Use(middleware.Recover())
 	e.HTTPErrorHandler = ErrorHandler
 	// User repository
 
@@ -56,6 +57,8 @@ func (s *Server) userRoute(handler handler.UserHandler) {
 	group.POST("/user", handler.StoreUser, m.Auth(s.secretKey))
 	group.POST("/auth", handler.Login)
 	group.PUT("/user/:id", handler.UpdateUser)
+	group.DELETE("/user/:id", handler.DeleteUser)
+	group.GET("/user/:id", handler.GetUserByID)
 	group.GET("/users", handler.GetUsers)
 }
 

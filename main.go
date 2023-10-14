@@ -14,7 +14,7 @@ func main() {
 	log.Println("Hello world")
 
 	c := database.NewDatabaseConnection()
-
+	defer c.Close()
 	if err := c.Schema.Create(context.Background()); err != nil {
 		log.Fatalf("failed creating schema %v", err)
 	}
@@ -24,7 +24,7 @@ func main() {
 
 	go func() {
 		if err := serv.E.Start(":9087"); err != nil {
-			log.Fatalf("echo err : %v", err)
+			serv.E.Logger.Fatal("Server is shut down")
 		}
 	}()
 
@@ -36,4 +36,5 @@ func main() {
 	if err := serv.E.Shutdown(ctx); err != nil {
 		serv.E.Logger.Fatal(err)
 	}
+
 }

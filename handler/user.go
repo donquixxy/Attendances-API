@@ -6,6 +6,7 @@ import (
 	"dg-test/domain/request"
 	"dg-test/service"
 	"dg-test/utils"
+	"fmt"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -17,6 +18,8 @@ type UserHandler interface {
 	Login(c echo.Context) error
 	UpdateUser(c echo.Context) error
 	GetUsers(c echo.Context) error
+	DeleteUser(c echo.Context) error
+	GetUserByID(c echo.Context) error
 }
 
 type userHandler struct {
@@ -32,6 +35,42 @@ func NewUserHandler(
 		s:         s,
 		validator: validator,
 	}
+}
+
+func (h *userHandler) GetUserByID(c echo.Context) error {
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
+	defer cancel()
+
+	idUser := c.Param("id")
+
+	result, err := h.s.GetUserByID(ctx, idUser)
+
+	if err != nil {
+		return ErrorResponse(err, c)
+	}
+
+	res := SuccessResponse("Succesfully retrieved", result)
+
+	return c.JSON(200, res)
+}
+
+func (h *userHandler) DeleteUser(c echo.Context) error {
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
+	defer cancel()
+
+	idUser := c.Param("id")
+
+	err := h.s.DeleteUser(ctx, idUser)
+
+	if err != nil {
+		return ErrorResponse(err, c)
+	}
+
+	res := SuccessResponse("Succes", fmt.Sprintf("User id %s has been deleted", idUser))
+
+	return c.JSON(200, res)
 }
 
 func (h *userHandler) GetUsers(c echo.Context) error {

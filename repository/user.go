@@ -15,6 +15,8 @@ type UserRepository interface {
 	FindUserByEmail(ctx context.Context, email string) (*ent.User, error)
 	UpdateUser(ctx context.Context, value *ent.User) (*ent.User, error)
 	GetAllUser(ctx context.Context) ([]*ent.User, error)
+	DeleteUser(ctx context.Context, idUser string) error
+	GetUserByID(ctx context.Context, idUser string) (*ent.User, error)
 }
 
 type userRepository struct {
@@ -26,6 +28,24 @@ func NewUserRepository(client *ent.Client) UserRepository {
 	return &userRepository{
 		client: client,
 	}
+}
+
+func (s *userRepository) GetUserByID(ctx context.Context, idUser string) (*ent.User, error) {
+	result, err := s.client.User.Get(ctx, idUser)
+
+	if err != nil {
+		return nil, &exception.RecordNotFoundError{
+			Message: err.Error(),
+		}
+	}
+
+	return result, nil
+}
+
+func (s *userRepository) DeleteUser(ctx context.Context, idUser string) error {
+	err := s.client.User.DeleteOneID(idUser).Exec(ctx)
+
+	return err
 }
 
 func (s *userRepository) GetAllUser(ctx context.Context) ([]*ent.User, error) {
