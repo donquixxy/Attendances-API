@@ -17,6 +17,7 @@ import (
 type UserService interface {
 	CreateUser(ctx context.Context, r *request.CreateUserRequest) (*ent.User, error)
 	Login(ctx context.Context, r *request.LoginRequest) (token, refreshToken string, err error)
+	UpdateUser(ctx context.Context, r *request.UpdateRequest, idUser string) (*ent.User, error)
 	GenerateToken(u *ent.User) (string, error)
 	GenerateRefreshToken(u *ent.User) (string, error)
 }
@@ -29,6 +30,39 @@ func NewUserService(userRepository repository.UserRepository) UserService {
 	return &userService{
 		userRepository: userRepository,
 	}
+}
+
+func (s *userService) UpdateUser(ctx context.Context, r *request.UpdateRequest, idUser string) (*ent.User, error) {
+
+	var hashedPassword string
+
+	if r.Password != "" {
+		r, err := utils.HashPassword(r.Password)
+
+		if err != nil {
+			return nil, &exception.BadRequestError{
+				Message: err.Error(),
+			}
+		}
+
+		hashedPassword = string(r)
+	}
+
+	u := &ent.User{
+		ID:       idUser,
+		Name:     r.Name,
+		Email:    r.Email,
+		Password: hashedPassword,
+	}
+
+	result, err := s.userRepository.UpdateUser(ctx, u)
+
+	if err != nil {
+		log.Printf("Failed update user [%v] ", err)
+		return nil, err
+	}
+
+	return result, nil
 }
 
 func (s *userService) GenerateToken(u *ent.User) (string, error) {

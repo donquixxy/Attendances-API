@@ -40,3 +40,19 @@ func ReadLoginRequest(c echo.Context) (*LoginRequest, error) {
 
 	return body, nil
 }
+
+type UpdateRequest struct {
+	Email    string `json:"email" form:"email"`
+	Password string `json:"password" form:"password"`
+	Name     string `json:"name" form:"name"`
+}
+
+func ReadUserUpdateRequest(c echo.Context) (*UpdateRequest, error) {
+	body := new(UpdateRequest)
+
+	if bindErr := c.Bind(body); bindErr != nil {
+		return nil, bindErr
+	}
+
+	return body, nil
+}

@@ -55,6 +55,7 @@ func (s *Server) userRoute(handler handler.UserHandler) {
 
 	group.POST("/user", handler.StoreUser, m.Auth(s.secretKey))
 	group.POST("/auth", handler.Login)
+	group.PUT("/user/:id", handler.UpdateUser)
 }
 
 func (s *Server) attendeesRoute(handler handler.AttendeesHandler) {
