@@ -2,7 +2,10 @@ module dg-test
 
 go 1.21.0
 
-require entgo.io/ent v0.12.4
+require (
+	entgo.io/ent v0.12.4
+	github.com/lib/pq v1.10.9
+)
 
 require (
 	ariga.io/atlas v0.14.1-0.20230918065911-83ad451a4935 // indirect
