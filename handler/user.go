@@ -12,6 +12,7 @@ import (
 
 type UserHandler interface {
 	StoreUser(c echo.Context) error
+	Login(c echo.Context) error
 }
 
 type userHandler struct {
@@ -33,13 +34,13 @@ func (h *userHandler) StoreUser(c echo.Context) error {
 	body, err := request.ReadRequest(c)
 
 	if err != nil {
-		return c.JSON(400, ErrorResponse("failed to get request", err))
+		return ErrorResponse(err, c)
 	}
 
 	result, err := h.s.CreateUser(ctx, body)
 
 	if err != nil {
-		return c.JSON(echo.ErrBadRequest.Code, ErrorResponse("failed insert user", err))
+		return ErrorResponse(err, c)
 	}
 
 	res := SuccessResponse("Successfully created", result)
@@ -47,17 +48,33 @@ func (h *userHandler) StoreUser(c echo.Context) error {
 	return c.JSON(201, res)
 }
 
+func (h *userHandler) Login(c echo.Context) error {
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
+	defer cancel()
+
+	body, err := request.ReadLoginRequest(c)
+
+	if err != nil {
+		return ErrorResponse(err, c)
+	}
+
+	token, refreshToken, err := h.s.Login(ctx, body)
+
+	if err != nil {
+		return ErrorResponse(err, c)
+	}
+
+	return c.JSON(200, SuccessResponse("Success", map[string]interface{}{
+		"access_token":  token,
+		"refresh_token": refreshToken,
+	}))
+
+}
+
 func SuccessResponse(msg string, data any) *entity.Response {
 	return &entity.Response{
 		Msg:  msg,
 		Data: data,
 	}
-}
-
-func ErrorResponse(msg string, err error) *entity.ErrResponse {
-	return &entity.ErrResponse{
-		Msg:   msg,
-		Error: err.Error(),
-	}
-
 }

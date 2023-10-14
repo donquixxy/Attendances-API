@@ -6,6 +6,8 @@ import (
 	"dg-test/repository"
 	"dg-test/service"
 
+	m "dg-test/middleware"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -39,7 +41,8 @@ func NewServer(
 func (s *Server) userRoute(handler handler.UserHandler) {
 	group := s.E.Group("/api")
 
-	group.POST("/user", handler.StoreUser)
+	group.POST("/user", handler.StoreUser, m.Auth("supersecret"))
+	group.POST("/auth", handler.Login)
 }
 
 // func (s *Server) ErrorHandler (err error, c echo.Context) {
