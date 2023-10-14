@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"dg-test/ent"
+	"dg-test/ent/user"
 	"log"
 	"time"
 )
@@ -10,6 +11,7 @@ import (
 // Contract for userrepository that needs to be satisfied
 type UserRepository interface {
 	CreateUser(ctx context.Context, value *ent.User) (*ent.User, error)
+	FindUserByEmail(ctx context.Context, email string) (*ent.User, error)
 }
 
 type userRepository struct {
@@ -36,4 +38,10 @@ func (s *userRepository) CreateUser(ctx context.Context, value *ent.User) (*ent.
 	}
 
 	return result, nil
+}
+
+func (s *userRepository) FindUserByEmail(ctx context.Context, email string) (*ent.User, error) {
+	result, err := s.client.User.Query().Where(user.Email(email)).Only(ctx)
+
+	return result, err
 }

@@ -24,3 +24,19 @@ func ReadRequest(c echo.Context) (*CreateUserRequest, error) {
 
 	return body, nil
 }
+
+type LoginRequest struct {
+	Email    string `json:"email" form:"email" validate:"required"`
+	Password string `json:"password" form:"password" validate:"required"`
+}
+
+func ReadLoginRequest(c echo.Context) (*LoginRequest, error) {
+	body := new(LoginRequest)
+
+	if bindErr := c.Bind(body); bindErr != nil {
+		log.Printf("failed to bind login user : %v", bindErr)
+		return nil, bindErr
+	}
+
+	return body, nil
+}
