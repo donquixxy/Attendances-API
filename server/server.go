@@ -1,6 +1,7 @@
 package server
 
 import (
+	"dg-test/domain/entity"
 	"dg-test/ent"
 	"dg-test/handler"
 	"dg-test/repository"
@@ -8,13 +9,16 @@ import (
 
 	m "dg-test/middleware"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
 type Server struct {
-	E  *echo.Echo
-	DB *ent.Client
+	E         *echo.Echo
+	DB        *ent.Client
+	secretKey string
+	Validator *validator.Validate
 }
 
 func NewServer(
@@ -22,17 +26,25 @@ func NewServer(
 ) *Server {
 	e := echo.New()
 	e.Use(middleware.CORS())
-
+	e.HTTPErrorHandler = ErrorHandler
 	// User repository
 
 	s := &Server{
-		E:  e,
-		DB: db,
+		E:         e,
+		DB:        db,
+		secretKey: "supersecret",
+		Validator: validator.New(),
 	}
 	userRepository := repository.NewUserRepository(s.DB)
 	userService := service.NewUserService(userRepository)
-	userHandler := handler.NewUserHandler(userService)
+	userHandler := handler.NewUserHandler(userService, s.Validator)
+
+	attendeesRepository := repository.NewAttendeesRepository(s.DB)
+	attendeesService := service.NewAttendeesService(attendeesRepository)
+	attendeesHandler := handler.NewAttendeesHandler(attendeesService, s.Validator)
+
 	s.userRoute(userHandler)
+	s.attendeesRoute(attendeesHandler)
 
 	return s
 }
@@ -41,8 +53,20 @@ func NewServer(
 func (s *Server) userRoute(handler handler.UserHandler) {
 	group := s.E.Group("/api")
 
-	group.POST("/user", handler.StoreUser, m.Auth("supersecret"))
+	group.POST("/user", handler.StoreUser, m.Auth(s.secretKey))
 	group.POST("/auth", handler.Login)
 }
 
-// func (s *Server) ErrorHandler (err error, c echo.Context) {
+func (s *Server) attendeesRoute(handler handler.AttendeesHandler) {
+	group := s.E.Group("/api", m.Auth(s.secretKey))
+
+	group.POST("/attendance", handler.InsertAttendees)
+}
+
+func ErrorHandler(err error, c echo.Context) {
+	js := &entity.ErrResponse{}
+
+	js.Error = err.Error()
+	js.Msg = "Internal Server error"
+	c.JSON(500, js)
+}

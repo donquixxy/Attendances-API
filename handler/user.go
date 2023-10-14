@@ -5,8 +5,10 @@ import (
 	"dg-test/domain/entity"
 	"dg-test/domain/request"
 	"dg-test/service"
+	"dg-test/utils"
 	"time"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 )
 
@@ -16,14 +18,17 @@ type UserHandler interface {
 }
 
 type userHandler struct {
-	s service.UserService
+	s         service.UserService
+	validator *validator.Validate
 }
 
 func NewUserHandler(
 	s service.UserService,
+	validator *validator.Validate,
 ) UserHandler {
 	return &userHandler{
-		s: s,
+		s:         s,
+		validator: validator,
 	}
 }
 
@@ -32,6 +37,12 @@ func (h *userHandler) StoreUser(c echo.Context) error {
 	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
 	defer cancel()
 	body, err := request.ReadRequest(c)
+
+	if err != nil {
+		return ErrorResponse(err, c)
+	}
+
+	err = utils.ValidateStruct(body, h.validator)
 
 	if err != nil {
 		return ErrorResponse(err, c)
@@ -54,6 +65,12 @@ func (h *userHandler) Login(c echo.Context) error {
 	defer cancel()
 
 	body, err := request.ReadLoginRequest(c)
+
+	if err != nil {
+		return ErrorResponse(err, c)
+	}
+
+	err = utils.ValidateStruct(body, h.validator)
 
 	if err != nil {
 		return ErrorResponse(err, c)
