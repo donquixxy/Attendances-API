@@ -13,6 +13,7 @@ type AttendeesRepository interface {
 	InsertAttendance(ctx context.Context, v *ent.Attendance) (*ent.Attendance, error)
 	GetByTypeAndDate(ctx context.Context, t int, date time.Time, idUser string) (*ent.Attendance, error)
 	GetAllAttendances(ctx context.Context) ([]*ent.Attendance, error)
+	GetAttendancesByIDUser(ctx context.Context, idUser string) ([]*ent.Attendance, error)
 }
 
 type attendeesRepository struct {
@@ -25,6 +26,18 @@ func NewAttendeesRepository(
 	return &attendeesRepository{
 		c: c,
 	}
+}
+
+func (s *attendeesRepository) GetAttendancesByIDUser(ctx context.Context, idUser string) ([]*ent.Attendance, error) {
+	result, _ := s.c.Attendance.Query().Where(attendance.IDUser(idUser)).All(ctx)
+
+	if len(result) == 0 {
+		return nil, &exception.RecordNotFoundError{
+			Message: "not found",
+		}
+	}
+
+	return result, nil
 }
 
 func (s *attendeesRepository) GetAllAttendances(ctx context.Context) ([]*ent.Attendance, error) {

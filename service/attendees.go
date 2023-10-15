@@ -15,6 +15,7 @@ type AttendeesService interface {
 	InsertAttendance(ctx context.Context, r *request.CreateRequest) (*ent.Attendance, error) // User id is by input
 	StoreAttendance(ctx context.Context, idUser string, typ int) (*ent.Attendance, error)    // User id claims by token
 	GetAllAttendances(ctx context.Context) ([]*ent.Attendance, error)
+	GetAttendancesByIDUser(ctx context.Context, idUser string) ([]*ent.Attendance, error)
 }
 
 type attendeesService struct {
@@ -27,6 +28,10 @@ func NewAttendeesService(
 	return &attendeesService{
 		attendeesRepository: attendeesRepository,
 	}
+}
+
+func (s *attendeesService) GetAttendancesByIDUser(ctx context.Context, idUser string) ([]*ent.Attendance, error) {
+	return s.attendeesRepository.GetAttendancesByIDUser(ctx, idUser)
 }
 
 func (s *attendeesService) GetAllAttendances(ctx context.Context) ([]*ent.Attendance, error) {
