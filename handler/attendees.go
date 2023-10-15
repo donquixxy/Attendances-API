@@ -6,6 +6,7 @@ import (
 	"dg-test/middleware"
 	"dg-test/service"
 	"dg-test/utils"
+	"fmt"
 	"log"
 	"strconv"
 	"time"
@@ -19,6 +20,8 @@ type AttendeesHandler interface {
 	StoreAttendance(c echo.Context) error // Id user claims by jwt
 	GetAllAttendances(c echo.Context) error
 	GetAllAttendancesByIDUser(c echo.Context) error
+	UpdateAttendance(c echo.Context) error
+	DeleteAttendance(c echo.Context) error
 }
 
 type attendeesHandler struct {
@@ -31,6 +34,50 @@ func NewAttendeesHandler(service service.AttendeesService, validator *validator.
 		service:   service,
 		validator: validator,
 	}
+}
+
+func (h *attendeesHandler) DeleteAttendance(c echo.Context) error {
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
+
+	defer cancel()
+
+	id := c.Param("id")
+
+	err := h.service.DeleteAttendance(ctx, id)
+
+	if err != nil {
+		return ErrorResponse(err, c)
+	}
+
+	res := SuccessResponse("Succesfully deleted", fmt.Sprintf("attendance id %s has been deleted", id))
+
+	return c.JSON(200, res)
+}
+
+func (h *attendeesHandler) UpdateAttendance(c echo.Context) error {
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
+
+	defer cancel()
+
+	id := c.Param("id")
+
+	body, err := request.ReadUpdateAttendanceRequest(c)
+
+	if err != nil {
+		return ErrorResponse(err, c)
+	}
+
+	result, err := h.service.UpdateAttendance(ctx, body, id)
+
+	if err != nil {
+		return ErrorResponse(err, c)
+	}
+
+	res := SuccessResponse("Succesfully updated", result)
+
+	return c.JSON(200, res)
 }
 
 func (h *attendeesHandler) GetAllAttendancesByIDUser(c echo.Context) error {

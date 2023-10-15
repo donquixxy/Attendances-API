@@ -21,3 +21,19 @@ func ReadCreateRequest(c echo.Context) (*CreateRequest, error) {
 
 	return body, nil
 }
+
+type UpdateAttendanceRequest struct {
+	IDUser string `json:"id_user" form:"id_user"`
+	Type   int    `json:"type" form:"type"`
+}
+
+func ReadUpdateAttendanceRequest(c echo.Context) (*UpdateAttendanceRequest, error) {
+	body := new(UpdateAttendanceRequest)
+
+	if bindErr := c.Bind(body); bindErr != nil {
+		log.Printf("failed to bind update request %v", bindErr)
+		return nil, bindErr
+	}
+
+	return body, nil
+}

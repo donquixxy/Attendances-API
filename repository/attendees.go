@@ -14,6 +14,8 @@ type AttendeesRepository interface {
 	GetByTypeAndDate(ctx context.Context, t int, date time.Time, idUser string) (*ent.Attendance, error)
 	GetAllAttendances(ctx context.Context) ([]*ent.Attendance, error)
 	GetAttendancesByIDUser(ctx context.Context, idUser string) ([]*ent.Attendance, error)
+	UpdateAttendance(ctx context.Context, v *ent.Attendance) (*ent.Attendance, error)
+	DeleteAttendance(ctx context.Context, id string) error
 }
 
 type attendeesRepository struct {
@@ -26,6 +28,26 @@ func NewAttendeesRepository(
 	return &attendeesRepository{
 		c: c,
 	}
+}
+
+func (s *attendeesRepository) DeleteAttendance(ctx context.Context, id string) error {
+	return s.c.Attendance.DeleteOneID(id).Exec(ctx)
+}
+
+func (s *attendeesRepository) UpdateAttendance(ctx context.Context, v *ent.Attendance) (*ent.Attendance, error) {
+	res := s.c.Attendance.UpdateOneID(v.ID)
+
+	if v.Type != 0 {
+		res.SetType(v.Type)
+	}
+
+	if v.IDUser != "" {
+		res.SetIDUser(v.IDUser)
+	}
+
+	result, err := res.SetUpdatedAt(time.Now()).Save(ctx)
+
+	return result, err
 }
 
 func (s *attendeesRepository) GetAttendancesByIDUser(ctx context.Context, idUser string) ([]*ent.Attendance, error) {

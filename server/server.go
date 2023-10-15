@@ -69,6 +69,8 @@ func (s *Server) attendeesRoute(handler handler.AttendeesHandler) {
 	group.POST("/absent", handler.StoreAttendance)
 	group.GET("/attendance", handler.GetAllAttendancesByIDUser)
 	group.GET("/attendances", handler.GetAllAttendances)
+	group.PUT("/attendance/:id", handler.UpdateAttendance)
+	group.DELETE("/attendance/:id", handler.DeleteAttendance)
 }
 
 func ErrorHandler(err error, c echo.Context) {
