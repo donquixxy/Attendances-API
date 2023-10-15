@@ -16,7 +16,8 @@ import (
 
 type UserService interface {
 	CreateUser(ctx context.Context, r *request.CreateUserRequest) (*ent.User, error)
-	Login(ctx context.Context, r *request.LoginRequest) (token, refreshToken string, err error)
+	Login(ctx context.Context, r *request.LoginRequest) (token, refreshToken string, err error) // Login returns a token, refresh token, and error.
+	GenerateTokenByRefreshToken(ctx context.Context, refreshToken string) (token string, rToken string, err error)
 	UpdateUser(ctx context.Context, r *request.UpdateRequest, idUser string) (*ent.User, error)
 	DeleteUser(ctx context.Context, idUser string) error
 	GetUserByID(ctx context.Context, idUser string) (*ent.User, error)
@@ -33,6 +34,77 @@ func NewUserService(userRepository repository.UserRepository) UserService {
 	return &userService{
 		userRepository: userRepository,
 	}
+}
+
+func (s *userService) GenerateTokenByRefreshToken(ctx context.Context, refreshToken string) (t string, rToken string, err error) {
+	log.Println(refreshToken)
+	if refreshToken == "" {
+		return "", "", &exception.BadRequestError{
+			Message: "empty refresh token given",
+		}
+	}
+
+	// parse refresh token value
+	parsedToken, err := jwt.ParseWithClaims(refreshToken, &token.Payload{}, func(t *jwt.Token) (interface{}, error) {
+		return []byte("supersecret2023012"), nil
+	})
+
+	if err != nil {
+		return "", "", &exception.BadRequestError{
+			Message: err.Error(),
+		}
+	}
+
+	if !parsedToken.Valid {
+		return "", "", &exception.UnauthorizedError{
+			Message: "invalid token given",
+		}
+	}
+
+	if v, ok := err.(*jwt.ValidationError); ok {
+		if v.Errors&jwt.ValidationErrorMalformed != 0 {
+			return "", "", &exception.UnauthorizedError{
+				Message: "invalid token",
+			}
+		}
+	}
+
+	claims, ok := parsedToken.Claims.(*token.Payload)
+
+	if !ok {
+		return "", "", &exception.BadRequestError{
+			Message: "failed parse token",
+		}
+	}
+
+	// Find user
+	user, err := s.userRepository.GetUserByID(ctx, claims.ID)
+
+	if err != nil {
+		return "", "", &exception.RecordNotFoundError{
+			Message: err.Error(),
+		}
+	}
+
+	//Generate token
+	accessToken, err := s.GenerateToken(user)
+
+	if err != nil {
+		return "", "", &exception.BadRequestError{
+			Message: err.Error(),
+		}
+	}
+
+	//Generate refresh token
+	refToken, err := s.GenerateRefreshToken(user)
+
+	if err != nil {
+		return "", "", &exception.BadRequestError{
+			Message: err.Error(),
+		}
+	}
+
+	return accessToken, refToken, nil
 }
 
 func (s *userService) GetUserByID(ctx context.Context, idUser string) (*ent.User, error) {

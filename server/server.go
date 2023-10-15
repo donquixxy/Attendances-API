@@ -56,6 +56,7 @@ func (s *Server) userRoute(handler handler.UserHandler) {
 
 	group.POST("/user", handler.StoreUser, m.Auth(s.secretKey))
 	group.POST("/auth", handler.Login)
+	group.POST("/refresh", handler.GenerateRefreshToken)
 	group.PUT("/user/:id", handler.UpdateUser, m.Auth(s.secretKey))
 	group.DELETE("/user/:id", handler.DeleteUser, m.Auth(s.secretKey))
 	group.GET("/user/:id", handler.GetUserByID, m.Auth(s.secretKey))

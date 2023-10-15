@@ -16,6 +16,7 @@ import (
 type UserHandler interface {
 	StoreUser(c echo.Context) error
 	Login(c echo.Context) error
+	GenerateRefreshToken(c echo.Context) error
 	UpdateUser(c echo.Context) error
 	GetUsers(c echo.Context) error
 	DeleteUser(c echo.Context) error
@@ -35,6 +36,24 @@ func NewUserHandler(
 		s:         s,
 		validator: validator,
 	}
+}
+func (h *userHandler) GenerateRefreshToken(c echo.Context) error {
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
+	defer cancel()
+
+	refreshToken := c.FormValue("refresh_token")
+
+	accessToken, refToken, err := h.s.GenerateTokenByRefreshToken(ctx, refreshToken)
+
+	if err != nil {
+		return ErrorResponse(err, c)
+	}
+
+	return c.JSON(200, SuccessResponse("Success", map[string]interface{}{
+		"access_token":  accessToken,
+		"refresh_token": refToken,
+	}))
 }
 
 func (h *userHandler) GetUserByID(c echo.Context) error {
