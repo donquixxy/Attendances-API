@@ -1,5 +1,17 @@
-# digite-test
+# digitel-test
 
+Base Url = https://crimson-meadow-9742.fly.dev
+
+## Employee (User) API
+
+**Endpoint :** /api/user
+**METHOD :** POST
+**DESCRIPTION :** Create a new Employee
+**BODY :** {
+    "name" : "name of user",
+    "email" : "email of user",
+    "password" : "password",
+}
 
 
 ## Getting started
