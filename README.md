@@ -6,6 +6,12 @@ Pre - test for golang developer @ digitels
 
 Import API & Environment with Postman
 
+## Features
+- [x] Authentication
+- [x] CRUD Employee (User)
+- [x] CRUD Attendances
+- [x] Cron job for send notification.
+
 ## Auth API
 
 **Endpoint : /api/auth**  
@@ -73,4 +79,53 @@ Import API & Environment with Postman
 **Header : Authorization Bearer Token**    
 **Description : Delete user with given ID. returns success msg**  
 
+## Attendance API
 
+**Endpoint : /api/attendance**   
+**Method : POST**  
+**Header : Authorization Bearer Token**    
+**Description : Store a new attendance with given ID User (by input). Type 1 for checkin, 2 for checkout.returns created attendance**   
+**Expected JSON :**  
+```json
+{
+   "id_user" : "iduserhere",
+   "type" : 1
+}
+```
+
+**Endpoint : /api/absent**   
+**Method : POST**  
+**Header : Authorization Bearer Token**    
+**Description : Store a new attendance based on Authorization token given. Type 1 for checkin, 2 for checkout.returns created attendance**   
+**Expected JSON :**  
+```json
+{
+   "type" : 2
+}
+```
+
+**Endpoint : /api/attendance/:id**   
+**Method : PUT**  
+**Header : Authorization Bearer Token**    
+**Description : Update attendance based on given id at param. Type 1 for checkin, 2 for checkout.returns updated attendance**   
+**Expected JSON :**  
+```json
+{
+   "type" : 1
+}
+```
+
+**Endpoint : /api/attendance/:id**   
+**Method : GET**  
+**Header : Authorization Bearer Token**    
+**Description : Get attendance by id based on ID given at param. return single object attendance if found, otherwise 404**
+
+**Endpoint : /api/attendances**   
+**Method : GET**  
+**Header : Authorization Bearer Token**    
+**Description : returns all attendances**
+
+**Endpoint : /api/attendances/:id**   
+**Method : DELETE**  
+**Header : Authorization Bearer Token**    
+**Description : delete attendances based on id given at param. return success msg**
