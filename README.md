@@ -9,7 +9,10 @@ Import API & Environment with Postman
 ## Auth API
 
 **Endpoint :** /api/auth  
+**Expected JSON :** : 
 ```json
+{
 email : "youremail@gmail.com",
 password : "yourpassword"
+}
 ```
