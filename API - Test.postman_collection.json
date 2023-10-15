@@ -1,0 +1,501 @@
+{
+	"info": {
+		"_postman_id": "4bb7d780-719f-4064-8d2f-715dd12b3e46",
+		"name": "API - Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30500584"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Store user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImU4YjFkNGYwLWQyODUtNGNjNC1hMzdkLTlmNzhhMzJiODZjMyIsImVtYWlsIjoiam9obmRvZUBnbWFpbC5jb20iLCJleHAiOjE2OTc0MzYzMDcsImlzcyI6Imd1c2FyaSJ9.l7Oc2WNNhBh816abF0IkhRR9FSCXvidVxQ56u99iGOE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "agus ari",
+									"description": "required",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "agusary726@gmail.com",
+									"description": "required",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"description": "required",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{dev}}/api/user",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						},
+						"description": "Create user to database."
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE1ODVmYjIyLTQyMDMtNGFmMi04N2NkLWI1MDIzNzBlMDYwMSIsImVtYWlsIjoiam9obmRvZUBnbWFpbC5jb20iLCJleHAiOjE2OTc0NDIxODcsImlzcyI6Imd1c2FyaSJ9.RoFtiZUxIL4tvq_Qbs5eZCumC91lmj2H441o61inPEc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "John",
+									"description": "non required",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "newmail@gmail.com",
+									"description": "non required",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"description": "non required",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{dev}}/api/user/a585fb22-4203-4af2-87cd-b502370e0601",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"a585fb22-4203-4af2-87cd-b502370e0601"
+							]
+						},
+						"description": "Update user based on given ID at url param"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE1ODVmYjIyLTQyMDMtNGFmMi04N2NkLWI1MDIzNzBlMDYwMSIsImVtYWlsIjoiYWd1c2FyeTcyNkBnbWFpbC5jb20iLCJleHAiOjE2OTc1MjU0OTUsImlzcyI6Imd1c2FyaSJ9.ZyxS0381ce_918NSMAV_bI08IxWyiY-CUnHBgQ6yp9E",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{dev}}/api/users",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						},
+						"description": "Return list of employee (users)"
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE1ODVmYjIyLTQyMDMtNGFmMi04N2NkLWI1MDIzNzBlMDYwMSIsImVtYWlsIjoiam9obmRvZUBnbWFpbC5jb20iLCJleHAiOjE2OTc0NDIxODcsImlzcyI6Imd1c2FyaSJ9.RoFtiZUxIL4tvq_Qbs5eZCumC91lmj2H441o61inPEc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{dev}}/api/user/0f86216b-93dd-413b-8c4c-538962f8fcea",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"0f86216b-93dd-413b-8c4c-538962f8fcea"
+							]
+						},
+						"description": "Delete user based on given ID at url param"
+					},
+					"response": []
+				},
+				{
+					"name": "Get By ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE1ODVmYjIyLTQyMDMtNGFmMi04N2NkLWI1MDIzNzBlMDYwMSIsImVtYWlsIjoiam9obmRvZUBnbWFpbC5jb20iLCJleHAiOjE2OTc0NDIxODcsImlzcyI6Imd1c2FyaSJ9.RoFtiZUxIL4tvq_Qbs5eZCumC91lmj2H441o61inPEc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{dev}}/api/user/a585fb22-4203-4af2-87cd-b502370e0601",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"a585fb22-4203-4af2-87cd-b502370e0601"
+							]
+						},
+						"description": "return user detail based on given param at url. if not found return 404"
+					},
+					"response": []
+				}
+			],
+			"description": "Collection of Employe (User) API"
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "agusary726@gmail.com",
+									"description": "required",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"description": "required",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{dev}}/api/auth",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"api",
+								"auth"
+							]
+						},
+						"description": "login api, return access and refresh token"
+					},
+					"response": []
+				},
+				{
+					"name": "Generate new token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "refresh_token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE1ODVmYjIyLTQyMDMtNGFmMi04N2NkLWI1MDIzNzBlMDYwMSIsImVtYWlsIjoibmV3bWFpbEBnbWFpbC5jb20iLCJleHAiOjE2OTgzNzk3NjcsImlzcyI6Imd1c2FyaSJ9.hM51swCsP2SFOpv5Htn6nhX5w_DE1y7mIbFnvOjo3-A",
+									"description": "required",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{dev}}/api/refresh",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"api",
+								"refresh"
+							]
+						},
+						"description": "return new access & refresh token with refresh token body"
+					},
+					"response": []
+				}
+			],
+			"description": "Authentication"
+		},
+		{
+			"name": "Attendees",
+			"item": [
+				{
+					"name": "Store",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE1ODVmYjIyLTQyMDMtNGFmMi04N2NkLWI1MDIzNzBlMDYwMSIsImVtYWlsIjoiam9obmRvZUBnbWFpbC5jb20iLCJleHAiOjE2OTc0NDIxODcsImlzcyI6Imd1c2FyaSJ9.RoFtiZUxIL4tvq_Qbs5eZCumC91lmj2H441o61inPEc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id_user",
+									"value": "e8b1d4f0-d285-4cc4-a37d-9f78a32b86c3",
+									"description": "required",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "1",
+									"description": "1 Checkin. 2 Checkout",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{dev}}/api/attendance",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"api",
+								"attendance"
+							]
+						},
+						"description": "create attendance, id user is by input"
+					},
+					"response": []
+				},
+				{
+					"name": "Absent",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE1ODVmYjIyLTQyMDMtNGFmMi04N2NkLWI1MDIzNzBlMDYwMSIsImVtYWlsIjoibmV3bWFpbEBnbWFpbC5jb20iLCJleHAiOjE2OTc1MTMyNDksImlzcyI6Imd1c2FyaSJ9.uZ0l_xgWhLwnTbQC8sQUSMJvfF0d1r9PeL3wbi49brw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "type",
+									"value": "2",
+									"description": "1 Checkin. 2 Checkout",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{dev}}/api/absent",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"api",
+								"absent"
+							]
+						},
+						"description": "create attendance, based on user id at Bearer token"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Attendances",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE1ODVmYjIyLTQyMDMtNGFmMi04N2NkLWI1MDIzNzBlMDYwMSIsImVtYWlsIjoibmV3bWFpbEBnbWFpbC5jb20iLCJleHAiOjE2OTc0NTcwNzgsImlzcyI6Imd1c2FyaSJ9.yW8-XOCKWrh6xD_yM4YBqIBi5-XnfJvXHpWwBsIbRGU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{dev}}/api/attendances",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"api",
+								"attendances"
+							]
+						},
+						"description": "return list of attendances"
+					},
+					"response": []
+				},
+				{
+					"name": "Get By User ID Logged in",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE1ODVmYjIyLTQyMDMtNGFmMi04N2NkLWI1MDIzNzBlMDYwMSIsImVtYWlsIjoibmV3bWFpbEBnbWFpbC5jb20iLCJleHAiOjE2OTc1MTMyNDksImlzcyI6Imd1c2FyaSJ9.uZ0l_xgWhLwnTbQC8sQUSMJvfF0d1r9PeL3wbi49brw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{dev}}/api/attendance",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"api",
+								"attendance"
+							]
+						},
+						"description": "return list of user attendances based on Bearer token"
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE1ODVmYjIyLTQyMDMtNGFmMi04N2NkLWI1MDIzNzBlMDYwMSIsImVtYWlsIjoibmV3bWFpbEBnbWFpbC5jb20iLCJleHAiOjE2OTc1MTMyNDksImlzcyI6Imd1c2FyaSJ9.uZ0l_xgWhLwnTbQC8sQUSMJvfF0d1r9PeL3wbi49brw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "type",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{dev}}/api/attendance/ea217272-4d05-4d6e-a9d3-0ed81ca383a4",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"api",
+								"attendance",
+								"ea217272-4d05-4d6e-a9d3-0ed81ca383a4"
+							]
+						},
+						"description": "update attendance"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE1ODVmYjIyLTQyMDMtNGFmMi04N2NkLWI1MDIzNzBlMDYwMSIsImVtYWlsIjoibmV3bWFpbEBnbWFpbC5jb20iLCJleHAiOjE2OTc1MTMyNDksImlzcyI6Imd1c2FyaSJ9.uZ0l_xgWhLwnTbQC8sQUSMJvfF0d1r9PeL3wbi49brw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{dev}}/api/attendance/ea217272-4d05-4d6e-a9d3-0ed81ca383a4",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"api",
+								"attendance",
+								"ea217272-4d05-4d6e-a9d3-0ed81ca383a4"
+							]
+						},
+						"description": "delete attendance based on given id at param"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
