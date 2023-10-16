@@ -1,0 +1,29 @@
+version: '3.9'
+services:
+  postgre:
+    image: postgres:alpine
+    container_name: postgre
+    environment:
+      - POSTGRES_PASSWORD=12345678
+      - POSTGRES_USER=quixxy
+      - POSTGRES_DB=dgtest
+    ports:
+      - 8090:5432
+    networks:
+      - my-networks
+  
+  be-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: be-service-v.1.0.5
+    container_name: be-service
+    depends_on:
+      - postgre
+    ports:
+      - 9087:9087
+    networks:
+      - my-networks
+
+networks:
+  my-networks:

@@ -16,13 +16,13 @@ import (
 )
 
 func main() {
-	log.Println("Hello world")
+
+	// Wait for postgres local to ready
+	log.Println("Waiting for local postgres to be ready")
+	time.Sleep(time.Second * 10)
 
 	c := database.NewDatabaseConnection()
 	defer c.Close()
-	if err := c.Schema.Create(context.Background()); err != nil {
-		log.Fatalf("failed creating schema %v", err)
-	}
 
 	dial := gomail.NewDialer("smtp.gmail.com", 587, "agusariputra70@gmail.com", "plzw ffgv imri pgad")
 

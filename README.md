@@ -6,6 +6,13 @@ Pre - test for golang developer @ digitels
 
 Import API & Environment with Postman
 
+## How to run locally
+
+1. Start docker engine
+2. Open terminal
+3. docker compose up -d
+
+
 ## Features
 - [x] Authentication
 - [x] CRUD Employee (User)
