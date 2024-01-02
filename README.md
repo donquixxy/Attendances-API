@@ -1,6 +1,6 @@
 # Attendances (Backend) APP
 
-Base Url = https://crimson-meadow-9742.fly.dev
+Golang Backend Digitels Test
 
 Import API & Environment with Postman
 
